@@ -1,0 +1,61 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all clean build:** watch -s",
+    "clean": "rimraf build",
+    "watch": "concurrently \"npm run watch:pug\" \"npm run watch:sass\" \"npm run watch:ts\" \"npm run watch:browser-sync\"",
+    "watch:browser-sync": "browser-sync start --config ./bs-config.js",
+    "watch:pug": "npm run build:pug -- --watch --pretty",
+    "watch:sass": "chokidar \"./src/**/*.sass\" --command \"npm run build:sass && npm run build:autoprefixer\"",
+    "watch:ts": "chokidar \"./src/**/*.ts\" --command \"npm run build:ts && npm run build:browserify\"",
+    "build": "npm-run-all clean build:** -s",
+    "build:ts": "tsc",
+    "build:browserify": "browserify build/index.js -o build/index.ts.js",
+    "//build:browserify": "browserify -p esmify build/index.js -o build/index.ts.js",
+    "build:sass": "sass ./src/index.sass ./build/index.css --style compressed --no-source-map",
+    "build:autoprefixer": "postcss ./build/index.css -o ./build/index.css --config ./postcss.config.js",
+    "build:pug": "pug -O pug_env.js src/ --out ./build/",
+    "build:copy:assets": "cpx \"src/assets/**/*\" build/assets/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deguchi/template.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/deguchi/template/issues"
+  },
+  "homepage": "https://github.com/deguchi/template#readme",
+  "devDependencies": {
+    "@types/node": "^14.10.2",
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "autoprefixer": "^9.7.5",
+    "browser-sync": "^2.26.12",
+    "browserify": "^17.0.0",
+    "chokidar-cli": "^2.1.0",
+    "concurrently": "^5.1.0",
+    "cpx": "^1.5.0",
+    "eslint": "^7.9.0",
+    "esmify": "^2.1.1",
+    "npm-force-resolutions": "^0.0.3",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^7.0.27",
+    "postcss-cli": "^6.1.3",
+    "postcss-scss": "^2.0.0",
+    "pug": "^2.0.4",
+    "pug-cli": "github:pugjs/pug-cli#master",
+    "rimraf": "^3.0.2",
+    "sass": "^1.26.3",
+    "typescript": "^4.0.2"
+  },
+  "resolutions": {
+    "minimist": ">=1.2.5"
+  }
+}
