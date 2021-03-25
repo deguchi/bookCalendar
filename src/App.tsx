@@ -29,14 +29,24 @@ interface Book {
 }
 
 
+function getQueryString() {
+    const params = {}
+    location.search.substr(1).split('&').map(function(param) {
+        const pairs = param.split('=');
+        params[pairs[0]] = decodeURIComponent(pairs[1]);
+    });
+    return params;    
+}
+
 class App extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.temp_books = {};
+        const params = getQueryString()
         this.state = {
           books: null,
           error: false,
-          keywords: ['キングダム', 'ちはやふる', '進撃の巨人'],
+          keywords: params.keywords ? params.keywords.split('|') : [],
           keywords_length: 0,
           loading: true,
         };
