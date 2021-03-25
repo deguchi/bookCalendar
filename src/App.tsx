@@ -46,7 +46,7 @@ class App extends Component<Props, State> {
         this.state = {
           books: null,
           error: false,
-          keywords: params.keywords ? params.keywords.split('|') : [],
+          keywords: params.q ? params.q.split('|') : [],
           keywords_length: 0,
           loading: true,
         };
