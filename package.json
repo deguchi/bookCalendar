@@ -9,13 +9,12 @@
     "watch": "concurrently \"npm run watch:pug\" \"npm run watch:sass\" \"npm run watch:ts\" \"npm run watch:browser-sync\"",
     "watch:browser-sync": "browser-sync start --config ./bs-config.js",
     "watch:pug": "npm run build:pug -- --watch --pretty",
-    "watch:sass": "chokidar \"./src/**/*.sass\" --command \"npm run build:sass && npm run build:autoprefixer\"",
+    "watch:sass": "chokidar \"./src/**/*.sass\" --command \"npm run build:sass\"",
     "watch:ts": "chokidar \"./src/**/*.tsx\" --command \"npm run build:ts\"",
     "build": "npm-run-all clean build:** -s",
     "build:ts": "esbuild ./src/index.tsx --outfile=./docs/index.js --bundle --minify --sourcemap --define:process.env.NODE_ENV='\"production\"'",
     "//build:browserify": "browserify -p esmify docs/index.js -o docs/index.ts.js",
     "build:sass": "sass ./src/index.sass ./docs/index.css --style compressed --no-source-map",
-    "build:autoprefixer": "postcss ./docs/index.css -o ./docs/index.css --config ./postcss.config.js",
     "build:pug": "pug -O pug_env.js src/ --out ./docs/",
     "build:copy:assets": "cpx \"src/assets/**/*\" docs/assets/",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -59,6 +58,7 @@
   "dependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "isbnjs": "^0.2.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   }

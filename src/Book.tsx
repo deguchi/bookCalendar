@@ -1,87 +1,102 @@
+// @flow
+import React, { Component } from 'react';
 
-import React from 'react'
-import {Component} from 'react';
-
-interface Props {
-}
-
-interface State {
+interface Book {
+    id: number
+    title: string
+    isbn: string
+    pubdate: string
+    year: number | null
+    month: number | null
+    day: number | null
+    weekDay: string
+    index: number
+    last: number
 }
 
 type Props = {
-books: Array<Book>,
-keywords: Keywords,
-reload: Func,
-loading: boolean
+  book: Book,
+  day: number | null,
+  weekDay: string,
 }
 
-class Books extends Component {
-    props: Props
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        let month = 0;
-        let prevDay = 0;
-        let prevMonth = 0;
-        let books = [];
-        this.props.books.map((book, i) => {
-        book.index = i;
-        book.last = this.props.books.length;
-        if (book.pubdate) {
-            book.pubdate = String(normalizePubdate(book.pubdate));
-            book.pubdate.match(/(\d{4})(\d{2})(\d{2})/g);
-            book.year = RegExp.$1;
-            book.month = RegExp.$2 === '00' ? 1 : Number(RegExp.$2);
-            book.day = RegExp.$3 === '00' ? 1 : Number(RegExp.$3);
-            const pubdate = [
-            RegExp.$1,
-            book.month === 1 ? '01' : RegExp.$2,
-            book.day === 1 ? '01' : RegExp.$3
-            ].join('-');
-            if (month !== book.month) {
-            month = book.month;
-            } else {
-            book.month = null;
-            }
-            const dateObj = new Date(pubdate);
-            const weekDayList = ['日', '月', '火', '水', '木', '金', '土'];
-            book.weekDay = weekDayList[dateObj.getDay()];	// 曜日
-
-            // 同じ日付なら
-            if (prevDay === book.day) {
-            book.day = null;
-            } else {
-            prevDay = book.day;
-            }
+export default (props:Props) => {
+  const OneDayPerMilliseconds = 24 * 60 * 60 * 1000;
+  return (
+    <div>
+      {(() => {
+        if (props.book.month) {
+          return (
+            <Month {...props.book} />
+          );
         }
-        books.push(book);
-        });
-        console.log(books)
-        return (
-        <View style={[styles.container, ContainerStyle]}>
-            <FlatList
-            data={books}
-            renderItem={({ item }) => <CalendarBook book={item} day={item.day} weekDay={item.weekDay} />}
-            keyExtractor={item => item.id}
-            style={styles.flatlist}
-            ListHeaderComponent={() => (<TouchableHighlight
-                underlayColor={theme.color.yellow}
-                onPress={() => Actions.keyword()}
-                style={{
-                justifyContent: 'center', // 子の配置 'flex-start', 'center', 'flex-end', 'space-between', 'space-around'
-                alignItems: 'center', // 'stretch', 'flex-start', 'flex-end', 'center'
-                marginTop: 16,
-                }}
-            >
-                <Text style={{
-                fontSize: 16,
-                color: theme.color.yellow
-                }}>{this.props.keywords.length}個のキーワード</Text>
-            </TouchableHighlight>)}
-            />
-        </View>
-        );
-    }
-}
+      })()}
+        <div className="book">
+          <div className="dateContainer">
+            <p className="pubdate">{props.day}</p>
+            {(() => {
+              if (props.book.day) {
+                return (
+                  <div className="weekDay">
+                    <p className="weekDayText">{props.weekDay}</p>
+                  </div>
+                );
+              }
+            })()}
+          </div>
+          <div className={'textContainer ' + (props.book.month === null ? 'border' : '')}>
+            <div className="text">
+              {(() => {
+                if (!props.book.pubdate) return null;
+                const d = new Date();
+                const month = ('0'+(d.getMonth()+1)).slice(-2);
+                const day = ('0'+d.getDate()).slice(-2);
+                const today = new Date(d.getFullYear()+'-'+month+'-'+day).getTime();
+                props.book.pubdate.match(/(\d{4})(\d{2})(\d{2})/g);
+                const pubdate = [
+                  RegExp.$1,
+                  RegExp.$2==='00' ? '01' : RegExp.$2,
+                  RegExp.$3==='00' ? '01' : RegExp.$3
+                ].join('-');
+                const pubtime = new Date(pubdate).getTime();
+                if (pubtime < (today - OneDayPerMilliseconds)) {
+                  return <p className="nowOnSale">発売中</p>;
+                } else if (pubtime === today) {
+                  return <p className="todayOnSale">今日発売！</p>;
+                } else if (pubtime < (today + OneDayPerMilliseconds * 7)) {
+                  return <p className="nearOnSale">もうすぐ発売!</p>;
+                }
+              })()}
+              <p className="title">{props.book.title}</p>
+              <p className="author">{props.book.author}</p>
+            </div>
+            {(() => {
+              if (props.book.isbn) {
+                return (
+                  <div className="imageContainer">
+                    <img className="image" src={`https://cover.openbd.jp/${props.book.isbn}.jpg`} />
+                  </div>
+                );
+              }
+            })()}
+          </div>
+        </div>
+    </div>
+  );
+};
 
+
+class Month extends Component {
+  constructor(props){
+    super(props)
+  }
+  render() {
+    return (
+      <div className="monthContainer">
+        <div className="monthBG">
+          <span className="month">{this.props.month}</span><span className="tsuki">月</span>
+        </div>
+      </div>
+    );
+  }
+}
