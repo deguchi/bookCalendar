@@ -7,6 +7,7 @@ html, body
     margin: 0 auto
 
 #app
+    padding-bottom: 3rem
     > p
         text-align: center
         margin: 3rem 0
@@ -27,31 +28,31 @@ html, body
             font-size: 1rem
     .book
         display: grid
-        grid-template-rows: 100px 1fr
-        grid-template-columns: 150px 1fr 100px
+        grid-template-columns: 70px 1fr 80px
+        column-gap: 1rem
         padding-top: 1rem
         margin-bottom: 1rem
         min-height: 160px
         border-top: 1px solid #CCCCCC
         .date
             display: flex
+            justify-content: flex-end            
             .day
-                font-size: 2rem
+                font-size: 1.8rem
                 font-weight: bold
             .weekDay
                 position: relative
-                top: 0.5rem
+                top: 1.25rem
                 display: flex
                 justify-content: center
                 align-items: center
-                width: 2rem
-                height: 2rem
+                width: 1rem
+                height: 1rem
                 background-color: #999999
                 border-radius: 50px
                 color: #ffffff
-                font-size: 0.7rem
+                font-size: 0.5rem
         .bib
-            margin-right: 3rem
             .nowOnSale
                 width: 4rem
                 text-align: center
@@ -67,7 +68,7 @@ html, body
                 color: #ffffff
                 background-color: #E60012
             .nearOnSale
-                width: 4rem
+                width: 7rem
                 text-align: center
                 padding: 2px 5px
                 margin-bottom: 0.5rem
@@ -86,5 +87,5 @@ html, body
         > a
             img
                 display: block
-                width: 100px
+                width: 70px
                 object-fit: contain
