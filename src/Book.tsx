@@ -1,6 +1,26 @@
 // @flow
 import React, { Component } from 'react';
 
+
+const buildQueryString = (params) => {
+	let parts = [];
+	let add = (key, value) => {
+		parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+	}
+	for (let key in params) {
+   		let param = params[key];
+   		if (Array.isArray(param)) {
+            param.map((value) => {
+   				add(key, value);
+   			});
+   		}
+   		else {
+   			add(key, param);
+   		}
+	}
+	return parts.join('&').replace(/%20/g, '+');
+}
+
 interface Book {
     id: number
     title: string
@@ -22,6 +42,9 @@ type Props = {
 
 export default (props:Props) => {
   const OneDayPerMilliseconds = 24 * 60 * 60 * 1000;
+  const orderMail = (book) => {
+    window.open('https://deguchi.github.io/mailOrder/?' + buildQueryString(book))
+  }
   return (
     <div>
       {(() => {
@@ -78,6 +101,8 @@ export default (props:Props) => {
                 {props.book.author}
                 </a>
             </p>
+
+            <button onClick={() => orderMail(props.book)}>書店にメールで注文</button>
         </div>
         {(() => {
             if (props.book.isbn) {
