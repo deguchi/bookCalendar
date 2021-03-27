@@ -18,7 +18,7 @@ const buildQueryString = (params) => {
    			add(key, param);
    		}
 	}
-	return parts.join('&').replace(/%20/g, '+');
+	return parts.join('&').replace(/%20/g, ' ');
 }
 
 interface Book {
