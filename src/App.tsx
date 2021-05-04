@@ -37,17 +37,16 @@ function getQueryString() {
   return params;
 }
 
-function toDate (str) {
-  var arr = (str.substr(0, 4) + '-' + str.substr(4, 2) + '-' + str.substr(6, 2)).split('-');
-  return new Date(arr[0], arr[1] - 1, arr[2]);
-};
+function toDate (str: any) {
+  return new Date(str.substr(0, 4), str.substr(4, 2) - 1, str.substr(6, 2));
+}
 
 
 class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.temp_books = {};
-    const params = getQueryString()
+    const params: any = getQueryString()
     this.state = {
       books: null,
       error: false,
