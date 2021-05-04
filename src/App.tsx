@@ -118,7 +118,9 @@ class App extends Component<Props, State> {
     return (
       <React.Fragment>
         <p>{this.state.keywords.title.length+this.state.keywords.author.length+this.state.keywords.publisher.length}個のキーワード</p>
-        {(this.state.loading) ? null : (
+        {(this.state.loading) ? (
+          <p>読み込み中...</p>
+        ) : (
           <Books books={this.state.books} reload={this._reload.bind(this)} loading={this.state.loading} />
         )}
       </React.Fragment>
