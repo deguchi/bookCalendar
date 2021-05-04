@@ -18,7 +18,6 @@ interface State {
   books: Book[] | null
   error: boolean
   keywords: string[]
-  keywords_length: number
   loading: boolean
 }
 
@@ -52,12 +51,11 @@ class App extends Component<Props, State> {
     this.state = {
       books: null,
       error: false,
-      keywords: params.q ? params.q.split('|') : [],
-      keywords_length: 0,
+      keywords: params.titles ? params.titles.split('|') : [],
       loading: true,
     };
+    this._search()
   }
-
   async _search() {
     let newBooks: Book[] = []
     for (const keyword of this.state.keywords) {
@@ -69,7 +67,7 @@ class App extends Component<Props, State> {
       })
     }
     newBooks = applySort(newBooks, 'pubdate', true)
-    this.setState({ books: newBooks, loading: false, keywords_length: this.state.keywords.length })
+    this.setState({ books: newBooks, loading: false })
 
     //   fetch(`https://asia-northeast1-hohohoza-172907.cloudfunctions.net/calendar?free=${keyword}`)
   }
@@ -110,16 +108,13 @@ class App extends Component<Props, State> {
     });
   }
   render() {
-    // console.log(this.state.books)
-    if (this.state.keywords.length > 0 && this.state.keywords.length !== this.state.keywords_length) {
-      this._search();
-      return null
-    }
-    if (this.state.keywords.length === 0 || (this.state.loading === false && this.state.books && this.state.books.length <= 0)) {
-      return null
-    }
     return (
-      <Books books={this.state.books} keywords={this.state.keywords} reload={this._reload.bind(this)} loading={this.state.loading} />
+      <React.Fragment>
+        <p>{this.state.keywords.length}個のキーワード</p>
+        {(this.state.loading) ? null : (
+          <Books books={this.state.books} keywords={this.state.keywords} reload={this._reload.bind(this)} loading={this.state.loading} />
+        )}
+      </React.Fragment>
     );
   }
 }

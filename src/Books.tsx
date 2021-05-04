@@ -9,7 +9,6 @@ import CalendarBook from './Book'
 
 interface Props {
     books: Book[]
-    keywords: string[]
     reload: () => void
     loading: boolean
 }
@@ -74,7 +73,6 @@ class Books extends Component<Props, State> {
         // console.log(books)
         if (!this.props.books) return null
         return (<React.Fragment>
-            <p>{this.props.keywords.length}個のキーワード</p>
             {this.props.books.map((book: Book) => {
                 return <CalendarBook key={book.id} book={book} day={book.day} weekDay={book.weekDay} />
             })}
