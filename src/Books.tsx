@@ -71,7 +71,7 @@ class Books extends Component<Props, State> {
         }
         books.push(book);
         });
-        console.log(books)
+        // console.log(books)
         if (!this.props.books) return null
         return (<React.Fragment>
             <p>{this.props.keywords.length}個のキーワード</p>

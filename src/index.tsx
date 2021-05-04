@@ -1,10 +1,3 @@
-function hello(name: string): string {
-    return `Hello, ${name}!`;
-}
-
-console.log(hello("TightlyTemplate"));
-
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 
