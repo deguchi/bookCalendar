@@ -17,7 +17,7 @@ interface Props {
 interface State {
   books: Book[] | null
   error: boolean
-  keywords: string[]
+  keywords: any
   loading: boolean
 }
 
@@ -50,20 +50,27 @@ class App extends Component<Props, State> {
     this.state = {
       books: null,
       error: false,
-      keywords: params.titles ? params.titles.split('|') : [],
+      keywords: {
+        title: params.title ? params.title.split('|') : [],
+        author: params.author ? params.author.split('|') : [],
+        publisher: params.publisher ? params.publisher.split('|') : [],
+      },
       loading: true,
     };
     this._search()
   }
   async _search() {
     let newBooks: Book[] = []
-    for (const keyword of this.state.keywords) {
-      const books = await this._get(keyword, 'title')
-      books.map((book: Book) => {
-        const i = ISBN.parse(book.isbn)
-        book.id = i.asIsbn10()
-        newBooks.push(book)
-      })
+    for (const param of ['title', 'author', 'publisher']) {
+      for (const keyword of this.state.keywords[param]) {
+        console.log(keyword)
+        const books = await this._get(keyword, param)
+        books.map((book: Book) => {
+          const i = ISBN.parse(book.isbn)
+          book.id = i.asIsbn10()
+          newBooks.push(book)
+        })
+      }
     }
     newBooks = applySort(newBooks, 'pubdate', true)
     this.setState({ books: newBooks, loading: false })
@@ -71,6 +78,7 @@ class App extends Component<Props, State> {
     //   fetch(`https://asia-northeast1-hohohoza-172907.cloudfunctions.net/calendar?free=${keyword}`)
   }
   async _get(keyword: string, param: string): Promise<Book[]> {
+      console.log(param)
       const url = `https://unitrad.calil.jp/v1/search?${param}=${encodeURIComponent(keyword)}&region=openbd-future`
       const books: any[] = await fetch(url).then((r) => r.json()).then((data) => data.books).catch((error) => console.log(error))
       const isbns: string[] = []
@@ -109,9 +117,9 @@ class App extends Component<Props, State> {
   render() {
     return (
       <React.Fragment>
-        <p>{this.state.keywords.length}個のキーワード</p>
+        <p>{this.state.keywords.title.length+this.state.keywords.author.length+this.state.keywords.publisher.length}個のキーワード</p>
         {(this.state.loading) ? null : (
-          <Books books={this.state.books} keywords={this.state.keywords} reload={this._reload.bind(this)} loading={this.state.loading} />
+          <Books books={this.state.books} reload={this._reload.bind(this)} loading={this.state.loading} />
         )}
       </React.Fragment>
     );
