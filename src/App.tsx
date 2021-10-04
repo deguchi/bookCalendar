@@ -99,6 +99,7 @@ class App extends Component<Props, State> {
             } catch (e) {
               console.log(e)
             }
+            if (books[index].title.match(volume)) volume = ''
             books[index].title = [books[index].title, volume].join(' ')
 
             const pubdate = b.summary.pubdate
