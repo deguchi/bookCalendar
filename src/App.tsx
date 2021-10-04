@@ -25,6 +25,7 @@ interface Book {
   id: number
   title: string
   isbn: string
+  volume: string
 }
 
 
@@ -88,6 +89,18 @@ class App extends Component<Props, State> {
         const bs = await fetch(url).then((r) => r.json()).catch((error) => console.log(error))
         bs.map((b:any, index: number) => {
           if (b) {
+            let volume = b.summary.volume
+            try {
+                // console.log(n.onix.DescriptiveDetail.TitleDetail.TitleElement.PartNumber)
+                if (volume === '') {
+                    volume = b.onix.DescriptiveDetail.TitleDetail.TitleElement.PartNumber.split(';')[0]
+                    if (b.summary.title.match(volume)) volume = ''
+                }
+            } catch (e) {
+              console.log(e)
+            }
+            books[index].title = [books[index].title, volume].join(' ')
+
             const pubdate = b.summary.pubdate
             let tpubdate
             try {
