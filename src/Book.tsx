@@ -42,8 +42,8 @@ type Props = {
 
 export default (props:Props) => {
   const OneDayPerMilliseconds = 24 * 60 * 60 * 1000;
-  const orderMail = (book) => {
-    window.open('https://deguchi.github.io/mailOrder/?' + buildQueryString(book))
+  const orderMail = (book: any) => {
+    return 'https://deguchi.github.io/mailOrder/?' + buildQueryString(book)
   }
   return (
     <div>
@@ -102,7 +102,7 @@ export default (props:Props) => {
                 </a>
             </p>
 
-            <button onClick={() => orderMail(props.book)}>書店にメールで注文</button>
+            <a className="order" href={orderMail(props.book)} target="_blank">書店にメールで注文</a>
         </div>
         {(() => {
             if (props.book.isbn) {
